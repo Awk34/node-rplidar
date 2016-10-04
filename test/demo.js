@@ -1,4 +1,4 @@
-import { RPLidar } from '../src/rplidar';
+import RPLidar from '../src/rplidar';
 
 let lidar = new RPLidar();
 lidar.init().then(async () => {

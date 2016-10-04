@@ -87,7 +87,7 @@ const RESPONSE_TYPES = {
     SAMPLERATE: 5,
 };
 
-export class RPLidar extends EventEmitter {
+export default class RPLidar extends EventEmitter {
     state = RPLIDAR_STATES.UNKNOWN;
     waitingFor;
 
@@ -357,4 +357,4 @@ function parseScan(data) {
     };
 }
 
-exports.default = RPLidar;
+module.exports = RPLidar;
