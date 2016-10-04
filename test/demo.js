@@ -87,57 +87,47 @@ const RESPONSE_TYPES = {
     SAMPLERATE: 5,
 };
 
-let byteCache = new Buffer(0);
-
 class RPLidar extends EventEmitter {
-    scanCache = new Buffer(0);
     state = RPLIDAR_STATES.UNKNOWN;
     waitingFor;
 
     // The motor seems to always start as off
     motorState = MOTOR_STATES.OFF;
 
-    static parser(emitter, buffer) {
-        // for(let i = 0; i < buffer.length; i++) {
-        //     buf[buf.length] = buffer[i];
-        //     if (buf[buf.length - 1] === delimiter[nextDelimIndex]) {
-        //         nextDelimIndex++;
-        //     }
-        //     if (nextDelimIndex === delimiter.length) {
-        //         emitter.emit('data', buf);
-        //         buf = [];
-        //         nextDelimIndex = 0;
-        //     }
-        // }
-        if(isHealthCheckResponse(buffer)) {
-            emitter.emit('health', {
-                status: parseInt(`${hexToBinaryString(buffer[7])}`, 2),
-                errorCode: parseInt(`${hexToBinaryString(buffer[9])}${hexToBinaryString(buffer[8])}`, 2)
-            });
-        } else if(isInfoCheckResponse(buffer)) {
-            emitter.emit('info', parseInfo(buffer));
-        } else if(isScanStart(buffer)) {
-            emitter.emit('scan-start');
-        } else if(isBootUpMessage(buffer)) {
-            this.emit('boot', String(buffer));
-        } else if(buffer.length === 256) {
-            try {
-                // add any extra bytes left off from the last buffer
-                let data = Buffer.concat([byteCache, buffer]);
-                let dataLength = data.length;
-                let extraBits = dataLength % 5;
+    static parser() {
+        let _scanCache = new Buffer(0);
 
-                for(let offset = 0; offset < dataLength - extraBits; offset += 5) {
-                    emitter.emit('data', parseScan(data.slice(offset, offset + 5)));
+        return function(emitter, buffer) {
+            if(isHealthCheckResponse(buffer)) {
+                emitter.emit('health', {
+                    status: parseInt(`${hexToBinaryString(buffer[7])}`, 2),
+                    errorCode: parseInt(`${hexToBinaryString(buffer[9])}${hexToBinaryString(buffer[8])}`, 2)
+                });
+            } else if(isInfoCheckResponse(buffer)) {
+                emitter.emit('info', parseInfo(buffer));
+            } else if(isScanStart(buffer)) {
+                emitter.emit('scan-start');
+            } else if(isBootUpMessage(buffer)) {
+                this.emit('boot', String(buffer));
+            } else if(buffer.length === 256) {
+                try {
+                    // add any extra bytes left off from the last buffer
+                    let data = Buffer.concat([_scanCache, buffer]);
+                    let dataLength = data.length;
+                    let extraBits = dataLength % 5;
+
+                    for(let offset = 0; offset < dataLength - extraBits; offset += 5) {
+                        emitter.emit('data', parseScan(data.slice(offset, offset + 5)));
+                    }
+
+                    // add any bits that don't make up a complete data packet to the cache
+                    _scanCache = data.slice(dataLength - extraBits, dataLength);
+                } catch(err) {
+                    emitter.emit('error', err);
                 }
-
-                // add any bits that don't make up a complete data packet to the cache
-                byteCache = data.slice(dataLength - extraBits, dataLength);
-            } catch(err) {
-                emitter.emit('error', err);
+            } else {
+                console.log('Unknown packet');
             }
-        } else {
-            console.log('Unknown packet');
         }
     }
 
@@ -155,7 +145,7 @@ class RPLidar extends EventEmitter {
             this._port = new SerialPort(this.path, {
                 baudrate: 115200,
                 buffersize: 256,
-                parser: RPLidar.parser
+                parser: RPLidar.parser()
             });
 
             this._port.on('error', err => this.emit('error', err));
