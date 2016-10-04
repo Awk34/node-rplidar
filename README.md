@@ -3,6 +3,7 @@
 ## Prerequisites
 
 Node >= 4.0.0
+Tested on Windows 10 x64
 
 ## Installation
 
