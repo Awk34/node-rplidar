@@ -167,11 +167,7 @@ class RPLidar extends EventEmitter {
 
                     this.state = RPLIDAR_STATES.IDLE;
 
-                    let hasListeners = this.emit('ready');
-
-                    // if(!hasListeners) {
-                    //     throw new Error('You must listen for the \'open\' event');
-                    // }
+                    this.emit('ready');
                     resolve();
                 });
             });
@@ -213,7 +209,8 @@ class RPLidar extends EventEmitter {
         this._port.write(COMMANDS.RESET);
 
         return new Promise(resolve => {
-            this._port.once('boot', bootMessage => {
+            this._port.once('boot', (/*bootMessage*/) => {
+                // if debug log bootMessage
                 resolve();
             });
         });
