@@ -1,6 +1,6 @@
 {
   "name": "rplidar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Awk34/node-rplidar#readme",
   "dependencies": {
+    "babel-runtime": "^6.11.6",
     "bit-buffer": "0.0.3",
     "lodash": "^4.16.2",
     "serialport": "^4.0.1",
