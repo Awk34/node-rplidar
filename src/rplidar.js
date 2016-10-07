@@ -345,7 +345,7 @@ function parseScan(data) {
     let angle = bb.getBits(9, 15, false) / 64.0; // 0-360 deg
     if(angle < 0 || angle > 360) throw new Error('ParseError: Angle parsed outside 0-360 range');
 
-    let distance = bb.getBits(24, 16, false); // mm
+    let distance = bb.getBits(24, 16, false) / 4.0; // mm
 
     return {
         start,
