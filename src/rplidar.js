@@ -157,6 +157,7 @@ export default class RPLidar extends EventEmitter {
                     // probably a lost packet fragment from an ungraceful shutdown during scanning. Throw it away.
                 } else {
                     console.log(data);
+                    this.emit('data', data);
                 }
             });
             this._port.on('health', health => this.emit('health', health));
