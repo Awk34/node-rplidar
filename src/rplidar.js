@@ -247,7 +247,7 @@ export default class RPLidar extends EventEmitter {
             this.waitingFor = 'SCAN_START';
             this._port.write(COMMANDS.SCAN);
 
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 this._port.once('scan-start', () => {
                     this.state = RPLIDAR_STATES.SCANNING;
                     this.waitingFor = 'SCAN';
