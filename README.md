@@ -34,3 +34,24 @@ lidar.init().then(() => {
     console.log('started scanning');
 });
 ```
+
+With ES2017:
+
+```js
+const RPLidar = require('rplidar');
+
+const lidar = new RPLidar();
+
+lidar.on('data', console.log);
+
+lidar.init().then(async () => {
+    let health = await lidar.getHealth();
+    console.log('health: ', health);
+    
+    let info = await lidar.getInfo();
+    console.log('info: ', info);
+    
+    await lidar.scan();
+    console.log('started scanning');
+});
+```
