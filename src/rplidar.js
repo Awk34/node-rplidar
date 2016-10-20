@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import SerialPort from 'serialport';
 import { BitView } from 'bit-buffer';
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'events';
+
+const DEBUG = process.env.NODE_ENV === 'development';
 
 function wait(time) {
     return new Promise(respond => {
@@ -126,7 +128,7 @@ export default class RPLidar extends EventEmitter {
                     emitter.emit('error', err);
                 }
             } else {
-                console.log('Unknown packet');
+                if(DEBUG) console.log('Unknown packet');
             }
         }
     }
@@ -156,8 +158,8 @@ export default class RPLidar extends EventEmitter {
                     // console.log('GARBAGE', data);
                     // probably a lost packet fragment from an ungraceful shutdown during scanning. Throw it away.
                 } else {
-                    console.log(data);
                     this.emit('data', data);
+                    if(DEBUG) console.log(data);
                 }
             });
             this._port.on('health', health => this.emit('health', health));
@@ -332,7 +334,7 @@ function parseScan(data) {
 
     let bb = new BitView(data);
 
-    console.log(`${byte0} ${byte1} ${byte2} ${byte3} ${byte4}`);
+    if(DEBUG) console.log(`${byte0} ${byte1} ${byte2} ${byte3} ${byte4}`);
 
     let quality = bb.getBits(2, 6, false);
 
