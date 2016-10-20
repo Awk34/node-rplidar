@@ -257,10 +257,12 @@ export default class RPLidar extends EventEmitter {
         });
     }
 
-    stopScan() {
+    stop() {
         this._port.write(COMMANDS.STOP);
 
-        return wait(1);
+        return wait(10).then(() => {
+            return this.stopMotor();
+        });
     }
 }
 
