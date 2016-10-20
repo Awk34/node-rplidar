@@ -352,9 +352,7 @@ function parseScan(data) {
 
     return {
         start,
-        inverseStart,
         quality,
-        C,
         angle,
         distance
     };
