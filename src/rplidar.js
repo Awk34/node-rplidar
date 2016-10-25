@@ -349,7 +349,7 @@ function parseScan(data) {
     if(C != 1) throw new Error('ParseError: C not 1');
 
     let angle = bb.getBits(9, 15, false) / 64.0; // 0-360 deg
-    if(angle < 0 || angle > 360) throw new Error('ParseError: Angle parsed outside 0-360 range');
+    if(angle < 0 || angle > 361) throw new Error(`ParseError: Angle parsed outside 0-360 range (${angle})`);    // I've noticed that sometimes it gives me an angle slightly over 360
 
     let distance = bb.getBits(24, 16, false) / 4.0; // mm
 
