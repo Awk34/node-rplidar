@@ -109,6 +109,7 @@ export default class RPLidar extends EventEmitter {
                 emitter.emit('info', parseInfo(buffer));
             } else if(isScanStart(buffer)) {
                 emitter.emit('scan-start');
+                _scanCache = new Buffer(0);
             } else if(isBootUpMessage(buffer)) {
                 this.emit('boot', String(buffer));
             } else if(buffer.length === 256) {
