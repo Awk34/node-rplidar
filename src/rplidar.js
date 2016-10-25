@@ -341,8 +341,8 @@ function parseScan(data) {
 
     let quality = bb.getBits(2, 6, false);
 
-    let start = byte0.substring(7, 8);
-    let inverseStart = byte0.substring(6, 7);
+    let start = Boolean(parseInt(byte0.substring(7, 8), 2));
+    let inverseStart = Boolean(parseInt(byte0.substring(6, 7), 2));
     if(start === inverseStart) throw new Error('ParseError: !S === S');
 
     let C = byte1.substring(7, 8);
