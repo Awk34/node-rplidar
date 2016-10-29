@@ -55,3 +55,5 @@ lidar.init().then(async () => {
     console.log('started scanning');
 });
 ```
+
+![screenshot](examples/improved-websocket-demo/screenshot.jpg)
