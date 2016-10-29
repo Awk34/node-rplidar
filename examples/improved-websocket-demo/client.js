@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .attr('dy', '.35em')
         .style('text-anchor', d => d < 270 && d > 90 ? 'end' : null)
         .attr('transform', d => d < 270 && d > 90 ? `rotate(180 ${(radius + 6)},0)` : null)
-        .text(d => `${d}°`);
+        .text(d => `${d}\u00B0`);
 
     let root = svg.append('svg:g').attr('id', 'data');
 
