@@ -57,3 +57,5 @@ lidar.init().then(async () => {
 ```
 
 ![screenshot](examples/improved-websocket-demo/screenshot.jpg)
+
+To see how I got here, you can read this blog post: http://andrewk.me/blog/57f4933c0f9923a86cf67a19
